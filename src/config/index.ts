@@ -7,4 +7,5 @@ export const EnvConfig = {
   environment: process.env.ENVIRONMENT as string,
   port: process.env.PORT as string,
   mongodbUri: process.env.MONGODB_URI as string,
+  salt: process.env.SALT as string,
 };
