@@ -46,13 +46,16 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
   const password = this.password;
+  const hashedPassword = await bcrypt.hash(password, Number(EnvConfig.salt));
+  this.password = hashedPassword;
 
-  bcrypt.hash(password, EnvConfig.salt).then((hashedPassword: string) => {
-    this.password = hashedPassword;
-  });
+  next();
+});
 
+userSchema.post("save", async function (doc, next) {
+  doc.password = "";
   next();
 });
 

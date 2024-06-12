@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import httpStatus from "http-status";
 import { sendResponse } from "../../utils/sendResponse";
+import { higherOrderController } from "../../utils/higherOrderController";
 
-const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
-  try {
+const signUpUser = higherOrderController(
+  async (req: Request, res: Response) => {
     const result = await AuthService.signUpUserToDB(req.body);
     sendResponse(res, {
       success: true,
@@ -12,10 +13,8 @@ const signUpUser = async (req: Request, res: Response, next: NextFunction) => {
       message: "User registered successfully",
       data: result,
     });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
 export const AuthController = {
   signUpUser,
