@@ -3,6 +3,7 @@ import { EnvConfig } from "../config";
 import { ZodError } from "zod";
 import { ErrorMessages } from "../interfaces/ErrorMessage";
 import mongoose from "mongoose";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 export const globalErrorResponse = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +39,14 @@ const buildSimplifiedError = (error: unknown) => {
     return errorMessages;
   } else if (error instanceof mongoose.Error.ValidatorError) {
     const errorMessages = { path: error.path, message: error.message };
+
+    return errorMessages;
+  } else if (error instanceof TokenExpiredError) {
+    const errorMessages = { path: "", message: "Token is expired." };
+
+    return errorMessages;
+  } else if (error instanceof JsonWebTokenError) {
+    const errorMessages = { path: "", message: "Token is invalid." };
 
     return errorMessages;
   }
