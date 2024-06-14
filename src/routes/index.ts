@@ -2,13 +2,10 @@ import express from "express";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { ServiceRoutes } from "../modules/Services/service.route";
 import { SlotRoutes } from "../modules/Slots/slot.route";
+import { BookingRoutes } from "../modules/Bookings/booking.route";
 
 const router = express.Router();
 const routes = [
-  // {
-  //   path: "/",
-  //   router: "",
-  // },
   {
     path: "/auth",
     routes: AuthRoutes,
@@ -21,10 +18,14 @@ const routes = [
     path: "/slots",
     routes: SlotRoutes,
   },
-  // {
-  //   path: "/bookings",
-  //   router: "",
-  // },
+  {
+    path: "/bookings",
+    routes: BookingRoutes.adminRouter,
+  },
+  {
+    path: "/my-bookings",
+    routes: BookingRoutes.userRouter,
+  },
 ];
 
 routes.forEach((route) => router.use(route.path, route.routes));

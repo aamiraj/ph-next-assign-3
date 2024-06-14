@@ -30,6 +30,27 @@ const insertSlotsToDb = async (payload: Partial<ISlot>) => {
   }
 };
 
+const getAllAvailableSlotsFromDb = async (query: Record<string, unknown>) => {
+  try {
+    const allSlots = Slot.find();
+
+    if (query?.date) {
+      allSlots.where("date").equals(query?.date);
+    }
+
+    if (query?.serviceId) {
+      allSlots.where("service").equals(query?.serviceId);
+    }
+
+    const allSlotsExec = await allSlots.populate("service").lean().exec();
+    
+    return allSlotsExec;
+  } catch (error) {
+    throw new APIError("Slots retrieved failed.", httpStatus.BAD_REQUEST);
+  }
+};
+
 export const SlotService = {
   insertSlotsToDb,
+  getAllAvailableSlotsFromDb,
 };

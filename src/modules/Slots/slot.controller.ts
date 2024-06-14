@@ -17,6 +17,29 @@ const insertSlots = higherOrderController(
   },
 );
 
+const getAllAvailableSlots = higherOrderController(
+  async (req: Request, res: Response) => {
+    const results = await SlotService.getAllAvailableSlotsFromDb(req.query);
+
+    if (results.length === 0) {
+      sendResponse(res, {
+        statusCode: httpStatus.NOT_FOUND,
+        success: false,
+        message: "No slots found.",
+        data: [],
+      });
+      return;
+    }
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Slots retrieved successfully.",
+      data: results,
+    });
+  },
+);
 export const SlotController = {
   insertSlots,
+  getAllAvailableSlots,
 };
