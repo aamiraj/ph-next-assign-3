@@ -14,7 +14,9 @@ export const globalErrorResponse = async (
 ) => {
   const errorMessages: ErrorMessages = buildSimplifiedError(error);
 
-  return res.json({
+  const statusCode = error?.statusCode || 500;
+
+  return res.status(statusCode).json({
     success: false,
     message: error?.message,
     errorMessages: errorMessages,
@@ -36,7 +38,7 @@ const buildSimplifiedError = (error: unknown) => {
     return errorMessages;
   } else if (error instanceof mongoose.Error.ValidatorError) {
     const errorMessages = { path: error.path, message: error.message };
-    
+
     return errorMessages;
   }
 

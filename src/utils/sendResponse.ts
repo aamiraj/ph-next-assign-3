@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { IResponseBody } from "../interfaces/responseBody";
+import { IResponseBody } from "../interfaces/ResponseBody";
 
 export const sendResponse = (res: Response, body: IResponseBody) => {
   return res.send({

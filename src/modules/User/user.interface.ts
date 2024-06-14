@@ -1,6 +1,7 @@
+import { Model } from "mongoose";
 import { Roles } from "./user.constant";
 
-type TRole = (typeof Roles)[number];
+export type TRole = (typeof Roles)[number];
 
 export interface IUser {
   name: string;
@@ -9,4 +10,8 @@ export interface IUser {
   phone: string;
   role: TRole;
   address: string;
+}
+
+export interface IUserModel extends Model<IUser> {
+  isPasswordMatched(plainPass: string, hashPass: string): Promise<boolean>;
 }
