@@ -1,28 +1,34 @@
 import { Schema, model } from "mongoose";
 import { IService } from "./service.interface";
+import { ServiceDurationTime } from "../Slots/slot.constant";
 
-const serviceSchema = new Schema<IService>({
-  name: {
-    type: String,
-    required: true,
+const serviceSchema = new Schema<IService>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    duration: {
+      type: Number,
+      default: ServiceDurationTime,
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  description: {
-    type: String,
+  {
+    timestamps: true,
   },
-  price: {
-    type: Number,
-    required: true,
-  },
-  duration: {
-    type: Number,
-    default: 60,
-    required: true,
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-});
+);
 
 const Service = model<IService>("Service", serviceSchema);
 

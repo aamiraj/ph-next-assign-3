@@ -3,8 +3,18 @@ import { validateRequest } from "../../utils/validateRequest";
 import { ServiceController } from "./service.controller";
 import verifyToken from "../../middlewares/verifyToken";
 import { ServiceValidation } from "./service.validation";
+import { SlotValidation } from "../Slots/slot.validation";
+import { SlotController } from "../Slots/slot.controller";
 
 const router = express.Router();
+
+// create slots route
+router.post(
+  "/slots",
+  verifyToken,
+  validateRequest(SlotValidation.insertSlotValidationSchema),
+  SlotController.insertSlots,
+);
 
 // create a service route
 router.post(
