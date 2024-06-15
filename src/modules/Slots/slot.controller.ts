@@ -6,6 +6,16 @@ import { SlotService } from "./slot.service";
 
 const insertSlots = higherOrderController(
   async (req: Request, res: Response) => {
+    // slots creation only allowed as an admin
+    if (req.user?.role !== "admin") {
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
+    }
+
     const result = await SlotService.insertSlotsToDb(req.body);
 
     sendResponse(res, {
@@ -39,6 +49,7 @@ const getAllAvailableSlots = higherOrderController(
     });
   },
 );
+
 export const SlotController = {
   insertSlots,
   getAllAvailableSlots,

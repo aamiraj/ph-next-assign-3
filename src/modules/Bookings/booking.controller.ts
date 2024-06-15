@@ -3,16 +3,18 @@ import { higherOrderController } from "../../utils/higherOrderController";
 import { sendResponse } from "../../utils/sendResponse";
 import { Request, Response } from "express";
 import { BookingService } from "./booking.service";
-import APIError from "../../errors/APIError";
 
 const insertBooking = higherOrderController(
   async (req: Request, res: Response) => {
     if (req.user.role !== "user") {
-      throw new APIError(
-        "You are not authorized to book.",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
+
     const result = await BookingService.insertBookingToDb(req);
 
     sendResponse(res, {
@@ -27,10 +29,12 @@ const insertBooking = higherOrderController(
 const getAllTheBookings = higherOrderController(
   async (req: Request, res: Response) => {
     if (req.user.role !== "admin") {
-      throw new APIError(
-        "You are not authorized to get all the bookings.",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
 
     const result = await BookingService.getAllTheBookingsFromDb();
@@ -57,10 +61,12 @@ const getAllTheBookings = higherOrderController(
 const getMyBookings = higherOrderController(
   async (req: Request, res: Response) => {
     if (req.user.role !== "user") {
-      throw new APIError(
-        "You are not authorized to get all the bookings.",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
 
     const result = await BookingService.getMyBookingsFromDb(req?.user?.email);

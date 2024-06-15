@@ -3,6 +3,8 @@ import { IUser, IUserModel } from "./user.interface";
 import bcrypt from "bcrypt";
 import { EnvConfig } from "../../config";
 import { Roles } from "./user.constant";
+import APIError from "../../errors/APIError";
+import httpStatus from "http-status";
 
 const userSchema = new Schema<IUser, IUserModel>(
   {
@@ -18,7 +20,7 @@ const userSchema = new Schema<IUser, IUserModel>(
     password: {
       type: String,
       required: [true, "Password is required."],
-      select: false
+      select: false,
     },
     role: {
       type: String,
@@ -38,12 +40,15 @@ const userSchema = new Schema<IUser, IUserModel>(
 userSchema.pre("save", async function (next) {
   const email = this.email;
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email: email });
 
-  if (userExists) {
-    throw new Error(`User already exists with ${email} email.`);
+  if ([userExists].length > 0) {
+    throw new APIError(
+      `User already exists with ${email} email.`,
+      httpStatus.BAD_REQUEST,
+    );
   }
-
+  
   next();
 });
 

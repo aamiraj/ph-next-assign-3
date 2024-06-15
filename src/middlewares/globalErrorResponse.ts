@@ -25,7 +25,8 @@ export const globalErrorResponse = async (
   });
 };
 
-const buildSimplifiedError = (error: unknown) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const buildSimplifiedError = (error: any) => {
   if (error instanceof ZodError) {
     const errorMessages = error.issues.map((issue) => ({
       path: issue.path,
@@ -39,6 +40,10 @@ const buildSimplifiedError = (error: unknown) => {
     return errorMessages;
   } else if (error instanceof mongoose.Error.ValidatorError) {
     const errorMessages = { path: error.path, message: error.message };
+
+    return errorMessages;
+  } else if (error?.code === 11000) {
+    const errorMessages = { path: "", message: error.message };
 
     return errorMessages;
   } else if (error instanceof TokenExpiredError) {

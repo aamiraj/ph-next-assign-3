@@ -3,16 +3,17 @@ import { higherOrderController } from "../../utils/higherOrderController";
 import { ServiceService } from "./service.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import APIError from "../../errors/APIError";
 
 const insertService = higherOrderController(
   async (req: Request, res: Response) => {
     // service creation only allowed as as admin
     if (req.user?.role !== "admin") {
-      throw new APIError(
-        "You are not authorized to add a service",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
 
     const result = await ServiceService.insertServiceToDb(req.body);
@@ -56,10 +57,12 @@ const updateService = higherOrderController(
   async (req: Request, res: Response) => {
     // service creation only allowed as as admin
     if (req.user?.role !== "admin") {
-      throw new APIError(
-        "You are not authorized to update a service",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
 
     const result = await ServiceService.updateServiceIntoDb(
@@ -80,10 +83,12 @@ const deleteService = higherOrderController(
   async (req: Request, res: Response) => {
     // service creation only allowed as as admin
     if (req.user?.role !== "admin") {
-      throw new APIError(
-        "You are not authorized to delete a service",
-        httpStatus.UNAUTHORIZED,
-      );
+      sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+      });
+      return;
     }
 
     const result = await ServiceService.deleteServiceFromDb(req.params?.id);
