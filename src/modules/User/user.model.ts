@@ -42,7 +42,9 @@ userSchema.pre("save", async function (next) {
 
   const userExists = await User.findOne({ email: email });
 
-  if ([userExists].length > 0) {
+  console.log(userExists);
+  
+  if (userExists) {
     throw new APIError(
       `User already exists with ${email} email.`,
       httpStatus.BAD_REQUEST,
