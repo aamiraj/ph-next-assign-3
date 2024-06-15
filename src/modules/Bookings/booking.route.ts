@@ -4,11 +4,11 @@ import { validateRequest } from "../../utils/validateRequest";
 import { BookingValidation } from "./booking.validation";
 import { BookingController } from "./booking.controller";
 
-const adminRouter = express.Router();
-const userRouter = express.Router();
+const myBookings = express.Router();
+const bookings = express.Router();
 
 // create a booking
-userRouter.post(
+bookings.post(
   "/",
   verifyToken,
   validateRequest(BookingValidation.insertBookingValidationSchema),
@@ -16,9 +16,9 @@ userRouter.post(
 );
 
 // get my bookings
-userRouter.get("/", verifyToken, BookingController.getMyBookings);
+myBookings.get("/", verifyToken, BookingController.getMyBookings);
 
 // get all the booking
-adminRouter.get("/", verifyToken, BookingController.getAllTheBookings);
+bookings.get("/", verifyToken, BookingController.getAllTheBookings);
 
-export const BookingRoutes = { adminRouter, userRouter };
+export const BookingRoutes = { bookings, myBookings };

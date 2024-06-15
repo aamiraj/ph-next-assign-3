@@ -20,11 +20,11 @@ const routes = [
   },
   {
     path: "/bookings",
-    routes: BookingRoutes.adminRouter,
+    routes: BookingRoutes.bookings,
   },
   {
     path: "/my-bookings",
-    routes: BookingRoutes.userRouter,
+    routes: BookingRoutes.myBookings,
   },
 ];
 
