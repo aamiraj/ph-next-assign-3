@@ -4,6 +4,12 @@ import { ZodError } from "zod";
 import { ErrorMessages } from "../interfaces/ErrorMessage";
 import mongoose from "mongoose";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import httpStatus from "http-status";
+
+interface TSimplifiedError {
+  messages: ErrorMessages;
+  statusCode: number
+}
 
 export const globalErrorResponse = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,14 +19,14 @@ export const globalErrorResponse = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) => {
-  const errorMessages: ErrorMessages = buildSimplifiedError(error);
+  const errorMessages: TSimplifiedError = buildSimplifiedError(error);
 
-  const statusCode = error?.statusCode || 500;
+  const statusCode = errorMessages?.statusCode || error?.statusCode || 500;
 
   return res.status(statusCode).json({
     success: false,
     message: error?.message,
-    errorMessages: errorMessages,
+    errorMessages: errorMessages?.messages,
     stack: EnvConfig.environment === "development" ? error?.stack : null,
   });
 };
@@ -33,32 +39,32 @@ const buildSimplifiedError = (error: any) => {
       message: issue.message,
     }));
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.INTERNAL_SERVER_ERROR };
   } else if (error instanceof mongoose.Error.CastError) {
     const errorMessages = { path: error.path, message: error.message };
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.INTERNAL_SERVER_ERROR };
   } else if (error instanceof mongoose.Error.ValidatorError) {
     const errorMessages = { path: error.path, message: error.message };
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.INTERNAL_SERVER_ERROR };
   } else if (error?.code === 11000) {
     const errorMessages = { path: "", message: error.message };
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.INTERNAL_SERVER_ERROR };
   } else if (error instanceof TokenExpiredError) {
     const errorMessages = { path: "", message: "Token is expired." };
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.UNAUTHORIZED };
   } else if (error instanceof JsonWebTokenError) {
     const errorMessages = { path: "", message: "Token is invalid." };
 
-    return errorMessages;
+    return { messages: errorMessages, statusCode: httpStatus.UNAUTHORIZED };
   }
 
   const errorMessages = {
     path: "",
     message: "",
   };
-  return errorMessages;
+  return { messages: errorMessages, statusCode: httpStatus.INTERNAL_SERVER_ERROR };
 };

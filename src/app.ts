@@ -6,7 +6,7 @@ import { globalErrorResponse } from "./middlewares/globalErrorResponse";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: ["http://localhost:5173", "https://ph-next-assign-3.onrender.com"] }));
 app.use(express.json());
 app.use(express.text());
 

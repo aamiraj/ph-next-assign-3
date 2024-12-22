@@ -8,7 +8,7 @@ const insertServiceValidationScema = z.object({
     description: z.string().optional(),
     price: z.number().nonnegative(),
     duration: z.number().nonnegative(),
-    isDeleted: z.boolean(),
+    isDeleted: z.boolean().optional(),
   }),
 });
 

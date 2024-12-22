@@ -12,19 +12,19 @@ const insertServiceToDb = async (payload: Partial<IService>) => {
 const getAServiceFromDb = async (id: string) => {
   const service = await Service.findById(id);
 
-  if (!service) {
-    throw new APIError("Service not found.", httpStatus.NOT_FOUND);
-  }
+  // if (!service) {
+  //   throw new APIError("Service not found.", httpStatus.NOT_FOUND);
+  // }
 
   return service;
 };
 
 const getAllServicesFromDb = async () => {
-  const services = await Service.find();
+  const services = await Service.find({ isDeleted: false });
 
-  if (services.length === 0) {
-    throw new APIError("Services not found.", httpStatus.NOT_FOUND);
-  }
+  // if (services.length === 0) {
+  //   throw new APIError("Services not found.", httpStatus.NOT_FOUND);
+  // }
 
   return services;
 };
@@ -43,17 +43,17 @@ const updateServiceIntoDb = async (id: string, payload: Partial<IService>) => {
 };
 
 const deleteServiceFromDb = async (id: string) => {
- const deletedService = await Service.findByIdAndUpdate(
-   id,
-   { isDeleted: true },
-   { new: true, runValidators: true },
- );
+  const deletedService = await Service.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true, runValidators: true },
+  );
 
- if (!deletedService) {
-   throw new APIError("Service not found.", httpStatus.NOT_FOUND);
- }
+  if (!deletedService) {
+    throw new APIError("Service not found.", httpStatus.NOT_FOUND);
+  }
 
- return deletedService;
+  return deletedService;
 };
 
 export const ServiceService = {
