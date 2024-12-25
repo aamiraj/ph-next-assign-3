@@ -3,6 +3,8 @@ import APIError from "../../errors/APIError";
 import Booking from "./booking.model";
 import { Request } from "express";
 import User from "../User/user.model";
+import Slot from "../Slots/slot.model";
+import mongoose from "mongoose";
 
 const insertBookingToDb = async (payload: Request) => {
   const user = payload.user;
@@ -16,23 +18,38 @@ const insertBookingToDb = async (payload: Request) => {
     );
   }
 
-  const { serviceId, slotId, ...remainings } = payload.body;
+  const { service, slot, ...remainings } = payload.body;
 
   const newBookingObject = {
     ...remainings,
-    service: serviceId,
-    slot: slotId,
+    service: service,
+    slot: slot,
     customer: customer?._id,
   };
 
-  const newBooking = await Booking.create(newBookingObject);
+  const session = await mongoose.startSession();
 
-  const recentlyCreatedBooking = await Booking.findById(newBooking?._id)
-    .populate("customer", "-role -createdAt -updatedAt -__v")
-    .populate("service", "-createdAt -updatedAt -__v")
-    .populate("slot", "-createdAt -updatedAt -__v");
+  try {
+    session.startTransaction();
 
-  return recentlyCreatedBooking;
+
+    await Booking.create(newBookingObject, { session });
+    await Slot.updateOne({ _id: slot }, { isBooked: "booked" }, { session })
+
+    await session.commitTransaction();
+
+    // const newBooking = await Booking.create(newBookingObject, { session });
+    // const recentlyCreatedBooking = await Booking.findById(newBooking?._id)
+    //   .populate("customer", "-role -createdAt -updatedAt -__v")
+    //   .populate("service", "-createdAt -updatedAt -__v")
+    //   .populate("slot", "-createdAt -updatedAt -__v");
+    // return recentlyCreatedBooking;
+  } catch (error) {
+    console.log("An error occurred during the transaction:" + error);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
 };
 
 const getAllTheBookingsFromDb = async () => {

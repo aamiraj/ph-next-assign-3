@@ -31,15 +31,15 @@ const getAllAvailableSlots = higherOrderController(
   async (req: Request, res: Response) => {
     const results = await SlotService.getAllAvailableSlotsFromDb(req.query);
 
-    if (results.length === 0) {
-      sendResponse(res, {
-        statusCode: httpStatus.NOT_FOUND,
-        success: false,
-        message: "No slots found.",
-        data: [],
-      });
-      return;
-    }
+    // if (results.length === 0) {
+    //   sendResponse(res, {
+    //     statusCode: httpStatus.NOT_FOUND,
+    //     success: false,
+    //     message: "No slots found.",
+    //     data: [],
+    //   });
+    //   return;
+    // }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

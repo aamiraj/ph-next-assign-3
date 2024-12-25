@@ -9,4 +9,17 @@ export const CarTypes = [
   "hybridVehicle",
   "bicycle",
   "tractor",
+  "sedan",
+  "coupe",
+  "hatchback",
+  "suv",
+  "crossover",
+  "convertible",
+  "wagon",
+  "minivan",
+  "pickup truck",
+  "sports car",
+  "luxury car",
+  "electric car",
+  "hybrid car"
 ] as const;
