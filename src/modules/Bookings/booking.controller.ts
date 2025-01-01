@@ -6,15 +6,6 @@ import { BookingService } from "./booking.service";
 
 const insertBooking = higherOrderController(
   async (req: Request, res: Response) => {
-    if (req.user.role !== "user") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await BookingService.insertBookingToDb(req);
 
     sendResponse(res, {
@@ -28,15 +19,6 @@ const insertBooking = higherOrderController(
 
 const getAllTheBookings = higherOrderController(
   async (req: Request, res: Response) => {
-    if (req.user.role !== "admin") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await BookingService.getAllTheBookingsFromDb();
 
     if (result?.length === 0) {
@@ -60,15 +42,6 @@ const getAllTheBookings = higherOrderController(
 
 const getMyBookings = higherOrderController(
   async (req: Request, res: Response) => {
-    if (req.user.role !== "user") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await BookingService.getMyBookingsFromDb(req?.user?.email);
 
     if (result?.length === 0) {

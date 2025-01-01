@@ -10,15 +10,15 @@ const bookings = express.Router();
 // create a booking
 bookings.post(
   "/",
-  verifyToken,
+  verifyToken(["user"]),
   validateRequest(BookingValidation.insertBookingValidationSchema),
   BookingController.insertBooking,
 );
 
 // get my bookings
-myBookings.get("/", verifyToken, BookingController.getMyBookings);
+myBookings.get("/", verifyToken(["user"]), BookingController.getMyBookings);
 
 // get all the booking
-bookings.get("/", verifyToken, BookingController.getAllTheBookings);
+bookings.get("/", verifyToken(["superAdmin", "admin"]), BookingController.getAllTheBookings);
 
 export const BookingRoutes = { bookings, myBookings };

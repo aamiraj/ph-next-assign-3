@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import APIError from "../../errors/APIError";
 import { IService } from "./service.interface";
 import Service from "./service.model";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { Request } from "express";
 
 const insertServiceToDb = async (payload: Partial<IService>) => {
   const newService = await Service.create(payload);
@@ -12,28 +14,30 @@ const insertServiceToDb = async (payload: Partial<IService>) => {
 const getAServiceFromDb = async (id: string) => {
   const service = await Service.findById(id);
 
-  // if (!service) {
-  //   throw new APIError("Service not found.", httpStatus.NOT_FOUND);
-  // }
-
   return service;
 };
 
-const getAllServicesFromDb = async () => {
-  const services = await Service.find({ isDeleted: false });
+const getAllServicesFromDb = async (req: Request) => {
+  const serviceQuery = new QueryBuilder(
+    Service.find(),
+    req?.query
+  )
+    .searchByNameOrTitle("name")
+    .sort();
 
-  // if (services.length === 0) {
-  //   throw new APIError("Services not found.", httpStatus.NOT_FOUND);
-  // }
-
+  const services = await serviceQuery.modelQuery;
   return services;
 };
 
 const updateServiceIntoDb = async (id: string, payload: Partial<IService>) => {
-  const updatedService = await Service.findByIdAndUpdate(id, payload, {
-    runValidators: true,
-    new: true,
-  });
+  const updatedService = await Service.findByIdAndUpdate(
+    id,
+    payload,
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
 
   if (!updatedService) {
     throw new APIError("Service not found.", httpStatus.NOT_FOUND);

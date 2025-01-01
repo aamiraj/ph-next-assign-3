@@ -33,7 +33,7 @@ const insertBookingToDb = async (payload: Request) => {
     session.startTransaction();
 
 
-    await Booking.create(newBookingObject, { session });
+    await Booking.create([newBookingObject], { session });
     await Slot.updateOne({ _id: slot }, { isBooked: "booked" }, { session })
 
     await session.commitTransaction();

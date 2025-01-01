@@ -11,7 +11,7 @@ const router = express.Router();
 // create slots route
 router.post(
   "/slots",
-  verifyToken,
+  verifyToken(["admin"]),
   validateRequest(SlotValidation.insertSlotValidationSchema),
   SlotController.insertSlots,
 );
@@ -19,7 +19,7 @@ router.post(
 // create a service route
 router.post(
   "/",
-  verifyToken,
+  verifyToken(["admin"]),
   validateRequest(ServiceValidation.insertServiceValidationScema),
   ServiceController.insertService,
 );
@@ -27,13 +27,13 @@ router.post(
 // update a service route
 router.put(
   "/:id",
-  verifyToken,
+  verifyToken(["admin"]),
   validateRequest(ServiceValidation.updateServiceValidationScema),
   ServiceController.updateService,
 );
 
 // delete a service route
-router.delete("/:id", verifyToken, ServiceController.deleteService);
+router.delete("/:id", verifyToken(["admin"]), ServiceController.deleteService);
 
 // get single service route
 router.get("/:id", ServiceController.getAService);

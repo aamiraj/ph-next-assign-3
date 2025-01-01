@@ -6,16 +6,6 @@ import httpStatus from "http-status";
 
 const insertService = higherOrderController(
   async (req: Request, res: Response) => {
-    // service creation only allowed as as admin
-    if (req.user?.role !== "admin") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await ServiceService.insertServiceToDb(req.body);
 
     sendResponse(res, {
@@ -42,7 +32,7 @@ const getAService = higherOrderController(
 
 const getAllServices = higherOrderController(
   async (req: Request, res: Response) => {
-    const results = await ServiceService.getAllServicesFromDb();
+    const results = await ServiceService.getAllServicesFromDb(req);
 
     sendResponse(res, {
       success: true,
@@ -55,16 +45,6 @@ const getAllServices = higherOrderController(
 
 const updateService = higherOrderController(
   async (req: Request, res: Response) => {
-    // service creation only allowed as as admin
-    if (req.user?.role !== "admin") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await ServiceService.updateServiceIntoDb(
       req.params?.id,
       req.body,
@@ -81,16 +61,6 @@ const updateService = higherOrderController(
 
 const deleteService = higherOrderController(
   async (req: Request, res: Response) => {
-    // service creation only allowed as as admin
-    if (req.user?.role !== "admin") {
-      sendResponse(res, {
-        success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
-      });
-      return;
-    }
-
     const result = await ServiceService.deleteServiceFromDb(req.params?.id);
 
     sendResponse(res, {
