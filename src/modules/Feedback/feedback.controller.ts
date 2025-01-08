@@ -15,7 +15,7 @@ export const addFeedback = higherOrderController(async (req, res) => {
 })
 
 export const findFeedbacks = higherOrderController(async (req, res) => {
-    const result = await findAllFeedbacksFromDB();
+    const result = await findAllFeedbacksFromDB(req);
 
     sendResponse(res, {
         success: true,
