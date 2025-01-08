@@ -23,3 +23,9 @@ export const insertUserValidatoinSchema = z.object({
     address: z.string({ message: "Must be a string." }).optional(),
   }),
 });
+
+export const updateUserRoleValidationSchema = z.object({
+  body: z.object({
+    role: z.enum(Roles, { message: "Must be a valid user type." })
+  })
+})

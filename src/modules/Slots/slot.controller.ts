@@ -30,7 +30,19 @@ const getAllAvailableSlots = higherOrderController(
   },
 );
 
+const updateSlotStatus = higherOrderController(async (req: Request, res: Response) => {
+  const results = await SlotService.updateSlotStatusInDb(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Slots updated successfully.",
+    data: results,
+  });
+})
+
 export const SlotController = {
   insertSlots,
   getAllAvailableSlots,
+  updateSlotStatus
 };

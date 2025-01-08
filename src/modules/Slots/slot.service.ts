@@ -4,6 +4,7 @@ import { ISlot } from "./slot.interface";
 import { generateSlots } from "../../utils/generateSlots";
 import Slot from "./slot.model";
 import Service from "../Services/service.model";
+import { Request } from "express";
 
 const insertSlotsToDb = async (payload: Partial<ISlot>) => {
   const service = Service.findById(payload?.service);
@@ -42,7 +43,26 @@ const getAllAvailableSlotsFromDb = async (query: Record<string, unknown>) => {
   return allSlotsExec;
 };
 
+const updateSlotStatusInDb = async (req: Request) => {
+  const slotId = req?.params?.id;
+  const slotStatus = req?.body?.slotStatus;
+
+  const foundSlot = await Slot.findById(slotId);
+
+  if (foundSlot) {
+    if (foundSlot?.isBooked === "booked") {
+      throw new APIError("The slot is already booked, cannot be changed the status.", httpStatus.NOT_ACCEPTABLE)
+    }
+
+    foundSlot.isBooked = slotStatus;
+    await foundSlot.save();
+  }
+
+  return foundSlot;
+}
+
 export const SlotService = {
   insertSlotsToDb,
   getAllAvailableSlotsFromDb,
+  updateSlotStatusInDb
 };

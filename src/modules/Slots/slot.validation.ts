@@ -33,6 +33,14 @@ const insertSlotValidationSchema = z.object({
     ),
 });
 
+const updateSlotStatusValidationSchema = z.object({
+  body: z
+    .object({
+      slotStatus: z.enum(SlotStatus),
+    })
+});
+
 export const SlotValidation = {
   insertSlotValidationSchema,
+  updateSlotStatusValidationSchema
 };

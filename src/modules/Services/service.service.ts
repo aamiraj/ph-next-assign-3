@@ -19,7 +19,7 @@ const getAServiceFromDb = async (id: string) => {
 
 const getAllServicesFromDb = async (req: Request) => {
   const serviceQuery = new QueryBuilder(
-    Service.find(),
+    Service.find({ isDeleted: false }),
     req?.query
   )
     .searchByNameOrTitle("name")

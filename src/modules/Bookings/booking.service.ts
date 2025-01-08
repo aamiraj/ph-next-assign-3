@@ -45,7 +45,7 @@ const insertBookingToDb = async (payload: Request) => {
     //   .populate("slot", "-createdAt -updatedAt -__v");
     // return recentlyCreatedBooking;
   } catch (error) {
-    console.log("An error occurred during the transaction:" + error);
+    console.log("An error occurred during the database transaction:" + error);
     await session.abortTransaction();
   } finally {
     await session.endSession();

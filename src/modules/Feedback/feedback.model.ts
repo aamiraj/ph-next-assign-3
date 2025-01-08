@@ -24,6 +24,10 @@ const feedbackSchema = new mongoose.Schema<IFeedback>({
         type: Boolean,
         default: false
     },
-})
+},
+    {
+        timestamps: true
+    }
+)
 
 export const Feedback = mongoose.model("Feedback", feedbackSchema)

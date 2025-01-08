@@ -3,6 +3,7 @@ import { Feedback } from "./feedback.model";
 import User from "../User/user.model";
 import httpStatus from "http-status";
 import APIError from "../../errors/APIError";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 export const addFeedbackIntoDB = async (payload: Request) => {
     const customerEmail = payload.user.email;
@@ -27,8 +28,13 @@ export const addFeedbackIntoDB = async (payload: Request) => {
     return newFeedback
 }
 
-export const findAllFeedbacksFromDB = async () => {
-    const feedbacks = await Feedback.find({ isDeleted: false });
+export const findAllFeedbacksFromDB = async (req: Request) => {
+    const feedbackQuery = new QueryBuilder(
+        Feedback.find({ isDeleted: false }),
+        req?.query
+    ).sort()
+
+    const feedbacks = await feedbackQuery.modelQuery;
 
     return feedbacks
 }
